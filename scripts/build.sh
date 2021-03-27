@@ -15,5 +15,5 @@ if [ ! -d "exe" ]; then
 fi
 
 #Exe
-g++ -Wall build/Socket.o build/Server.o -o exe/Server
-g++ -Wall build/Socket.o build/Client.o -o exe/Client
+g++ -Wall build/Socket.o build/Server.o -o exe/Server.exe
+g++ -Wall build/Socket.o build/Client.o -o exe/Client.exe
