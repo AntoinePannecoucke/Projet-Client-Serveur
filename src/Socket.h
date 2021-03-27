@@ -1,3 +1,6 @@
+#ifndef __SOCKET_H__
+#define __SOCKET_H__
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -72,3 +75,5 @@ namespace stdsock {
     };
     
 }
+
+#endif // __SOCKET_H__
