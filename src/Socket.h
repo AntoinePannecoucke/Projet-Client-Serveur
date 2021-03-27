@@ -17,6 +17,21 @@
 
 #define MAXDATASIZE 100
 
+#define HELLO "helo"
+#define QUIT "quit"
+#define WAIT "wait"
+#define RECEIVE "recv"
+#define DECK "deck"
+#define CARD "card"
+#define ROUND "tour"
+#define SPY "espn"
+#define END "fnsh"
+#define ERROR "eror"
+
+#define TIME_OUT 408
+#define BAD_RESPONSE 409
+#define BAD_CARD 400
+
 namespace stdsock {
     
 
