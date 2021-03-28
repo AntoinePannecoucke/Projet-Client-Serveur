@@ -1,7 +1,10 @@
 #include "Socket.h"
 #include "Player.h"
+#include <iostream>
+#include <vector>
 
 void sendError(stdsock::TransportSocket&, int);
+bool checkRecv(std::string, std::vector<std::string>);
 
 int main(){
     stdsock::ConnectionSocket connection;
@@ -9,13 +12,17 @@ int main(){
     while(true){
         stdsock::TransportSocket player_one, player_two;
         player_one.setSock(connection.accept()); //Waiting connection of player 1
-        Player* p_one = new Player(player_one);
-
-        p_one->recv();
-        p_one->send(WAIT);
+        //Player* p_one = new Player(player_one);
+        player_one.receive();
+        player_one.send(WAIT);
+        //p_one->recv();
+        //p_one->send(WAIT);
         
-        std::string response = p_one->recv();
-        if (response.compare(RECEIVE)){ //Waiting for RECEIVE
+        std::string response = player_one.receive();
+        std::vector<std::string> valid;
+        valid.push_back(RECEIVE);
+        checkRecv(response, valid);
+        /*if (response.compare(RECEIVE)){ //Waiting for RECEIVE
             sendError(player_one, BAD_RESPONSE);
         }
         player_two.setSock(connection.accept()); //Waiting connection of player 2
@@ -25,7 +32,7 @@ int main(){
 
         p_one->sendDeck();
         p_two->sendDeck();
-
+*/
 
     }
     return 0;
@@ -38,6 +45,11 @@ void sendError(stdsock::TransportSocket& socket, int code){
     socket.send(error);
 }
 
-void checkRecv(std::string data, std::string valid[]){
-    bool isOk = false;
+bool checkRecv(std::string data, std::vector<std::string> valid){
+    for (std::string str : valid){
+        if (strcmp(str.c_str(), data.c_str()) == 0){
+            return true;
+        }
+    }
+    return false;
 }

@@ -8,7 +8,9 @@ int main(){
     transport.send(HELLO);
 
     std::string str = transport.receive();
-    
+
+    transport.send(RECEIVE);
+    /*
     if (!str.compare(WAIT)){
         transport.send(RECEIVE);
         transport.receive();
@@ -22,6 +24,7 @@ int main(){
         card.append(card_choose);
         transport.send(card);
     }
+    */
     
 
 }
