@@ -50,7 +50,7 @@ std::string stdsock::TransportSocket::receive(){
 int stdsock::TransportSocket::send(std::string msg){
     
     if (::send(sock_fd, msg.c_str(), strlen(msg.c_str()), 0) <= 0)
-        puts("erreur");
+        puts("send erreur");
     else{
         puts("send :");
         char message[msg.size() + 1];

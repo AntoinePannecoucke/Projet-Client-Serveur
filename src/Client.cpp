@@ -10,6 +10,8 @@ int main(){
     std::string str = transport.receive();
 
     transport.send(RECEIVE);
+
+    transport.receive();
     /*
     if (!str.compare(WAIT)){
         transport.send(RECEIVE);
