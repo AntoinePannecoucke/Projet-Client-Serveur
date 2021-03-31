@@ -41,8 +41,6 @@ std::string stdsock::TransportSocket::receive(){
     char buff[MAXDATASIZE];
     ::bzero(buff, MAXDATASIZE);
     ::recv(sock_fd, buff, sizeof(buff), 0);
-    puts("receive :");
-    puts(buff);
     std::string str(buff);
     return str;
 }
@@ -52,10 +50,8 @@ int stdsock::TransportSocket::send(std::string msg){
     if (::send(sock_fd, msg.c_str(), strlen(msg.c_str()), 0) <= 0)
         puts("send erreur");
     else{
-        puts("send :");
         char message[msg.size() + 1];
         msg.copy(message, msg.size() + 1);
-        puts(message);
     }
         
     return 0;

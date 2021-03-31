@@ -25,7 +25,7 @@ void Player::sendDeck()
     std::string msg = DECK;
     for (int i = 0; i < DECK_SIZE; i++){
         msg.append(" ");
-        msg.append(std::to_string(1));
+        msg.append(std::to_string(0));
     }
     this->send(msg);
 }
@@ -33,4 +33,12 @@ void Player::sendDeck()
 int Player::getPoints() 
 {
     return this->points;
+}
+
+void Player::sendError(int code) 
+{
+    std::string error = ERROR;
+    error.append(" ");
+    error.append(std::to_string(code));
+    this->socket->send(error);
 }

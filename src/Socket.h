@@ -20,17 +20,31 @@
 
 #define MAXDATASIZE 100
 
-#define HELLO "helo"
-#define QUIT "quit"
-#define WAIT "wait"
-#define RECEIVE "recv"
-#define DECK "deck"
-#define CARD "card"
-#define ROUND "tour"
-#define SPY "espn"
-#define END "fnsh"
-#define ERROR "eror"
+/**
+ * Protocole Solo
+ */
 
+#define HELLO   "helo"
+#define MENU    "menu"
+#define SOLO    "solo"
+#define BEGIN   "bgin"
+
+                        // (boolean pour chaque carte)
+#define DECK    "deck"  // [0-1] [0-1] [0-1] [0-1] [0-1] [0-1] [0-1] [0-1]
+#define ERROR   "eror"  // [Code Erreur]
+
+                        // (état du round, score player 1, score player 2, carte player 1, carte player 2)
+#define ROUND   "tour"  // [0-2] [0-4] [0-4] [1-8] [1-8]
+
+                        // (carte jouée)
+#define CARD    "card"  // [1-8]
+#define NEXT    "next"
+#define QUIT    "quit"
+#define RECEIVE "recv"
+
+/**
+ * Code Erreur
+ */
 #define TIME_OUT 408
 #define BAD_RESPONSE 409
 #define BAD_CARD 400

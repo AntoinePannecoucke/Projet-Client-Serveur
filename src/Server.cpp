@@ -6,28 +6,23 @@
 #include <thread>
 
 bool checkRecv(std::string, std::vector<std::string>);
-void multiplayerGame(Player*, Player*);
+void game(Player*);
+
+constexpr unsigned int str2int(const char* str, int h = 0){
+    return !str[h] ? 5381 : (str2int(str, h+1) * 33) ^ str[h];
+}
 
 int main(){
     stdsock::ConnectionSocket connection;
     connection.openConnection();
     while(true){
         stdsock::TransportSocket* player_one = new stdsock::TransportSocket();
-        stdsock::TransportSocket* player_two = new stdsock::TransportSocket();
+        
 
         player_one->setSock(connection.accept()); //Waiting connection of player 1
         Player* p_one = new Player(player_one);
-        p_one->recv();
-        p_one->send(WAIT);
-        p_one->recv();
 
-        player_two->setSock(connection.accept()); //Waiting connection of player 2
-        Player* p_two = new Player(player_two);
-        p_two->recv();
-        p_two->send(WAIT);
-        p_two->recv();
-
-        multiplayerGame(p_one, p_two);
+        game(p_one);
     }
     return 0;
 }
@@ -48,36 +43,64 @@ bool checkRecv(std::string data, std::vector<std::string> valid){
     return false;
 }
 
-void multiplayerGame(Player* player_one, Player* player_two){
-    /*while (player_one->getPoints() < 4 && player_two->getPoints() < 4){*/
-        player_one->sendDeck();
-        player_two->sendDeck();
-/*
-        std::string response_one, response_two;
+void game(Player* player){
+    while (player->getPoints() < 4){
+        std::string request = player->recv();
+        std::string response;
 
-        bool request_one_ok, request_two_ok;
-        request_one_ok = request_two_ok = false;
+        switch (str2int(request.substr(0, 4).c_str()))
+        {
+        case str2int(NEXT):
+            player->send(BEGIN);
+            break;
 
-        do {
-
-            if (!request_one_ok){
-                response_one = player_one->recv();
-                request_one_ok = (strcmp(CARD, response_one.substr(0,4).c_str()) == 0);
-                if (!request_one_ok){
-                    player_one->sendError(BAD_RESPONSE);
-                }
-            }
-
-            if (!request_two_ok){
-                response_two = player_one->recv();
-                request_one_ok = (strcmp(CARD, response_two.substr(0,4).c_str()) == 0);
-                if (!request_two_ok){
-                    player_two->sendError(BAD_RESPONSE);
-                }
-            }
-
-        } while (!request_one_ok && !request_two_ok);
-*/
+        case str2int(ROUND):
+            response = ROUND;
+            response.append(" 0 1 0 ");
+            response.append(std::to_string(player->getCurrentCard()));
+            response.append(" 4");
+            player->send(response);
+            break;
         
-    //}
+
+        case str2int(SOLO):
+            //TODO make IA
+            player->send(BEGIN);
+            break;
+        case str2int(DECK):
+            player->sendDeck();
+            break;
+        
+        case str2int(HELLO):
+            player->send(MENU);
+            break;
+
+        case str2int(QUIT):
+            delete player;
+            return;
+            break;
+
+        case str2int(CARD):
+            if (request.length() == 6){
+                char choice = request.at(5);
+                if (choice >= '1' && choice <= '8'){
+                    player->setCurrentCard(choice - '0');
+                    player->send(RECEIVE);
+                }
+                else {
+                    player->sendError(BAD_CARD);
+                }
+            }
+            else {
+                player->sendError(BAD_RESPONSE);
+            }
+            break;
+
+        default:
+            delete player;
+            return;
+            break;
+        }
+        
+    }
 }
