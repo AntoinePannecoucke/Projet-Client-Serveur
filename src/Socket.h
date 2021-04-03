@@ -34,7 +34,7 @@
 #define ERROR   "eror"  // [Code Erreur]
 
                         // (état du round, score player 1, score player 2, carte player 1, carte player 2)
-#define ROUND   "tour"  // [0-2] [0-4] [0-4] [1-8] [1-8]
+#define ROUND   "tour"  // [0-2] [0-4] [0-4] [0-7] [0-7]
 
                         // (carte jouée)
 #define CARD    "card"  // [1-8]

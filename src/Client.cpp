@@ -1,14 +1,15 @@
 #include "Socket.h"
 #include <iostream>
 
-const std::string card[] = {"1 - Prince : \"Vous gagnez la manche\"",
-                            "2 - General : \"Votre carte de la prochaine manche voit sa valeur augmentee de +2\"",
-                            "3 - Magicien : \"Annule la capacité speciale de la carte jouee par l'adversaire\"",
+const std::string card[] = {"0 - Musicien : \"Cette manche est annulee et mise en attente\"",
+                            "1 - Princesse : \"Si votre adversaire a jouee son Prince vous remportez la partie\"",
+                            "2 - Espion : \"A la prochaine manche, votre adversaire revele sa carte avant que vous choisissiez la votre\"",
+                            "3 - Assasin : \"La valeur la plus faible l'emporte\"",
                             "4 - Ambassadeur : \"Si vous gagnez avec cette carte, cela compte pour 2 manches\"",
-                            "5 - Assasin : \"La valeur la plus faible l'emporte\"",
-                            "6 - Espion : \"A la prochaine manche, votre adversaire revele sa carte avant que vous choisissiez la votre\"",
-                            "7 - Princesse : \"Si votre adversaire a jouee son Prince vous remportez la partie\"",
-                            "8 - Musicien : \"Cette manche est annulee et mise en attente\""};
+                            "5 - Magicien : \"Annule la capacité speciale de la carte jouee par l'adversaire\"",
+                            "6 - General : \"Votre carte de la prochaine manche voit sa valeur augmentee de +2\"",
+                            "7 - Prince : \"Vous gagnez la manche\""
+                            };
 
 void deckParse(std::string, bool[]);
 void roundParse(std::string);
@@ -119,19 +120,19 @@ void deckParse(std::string deck, bool cards[]){
 
 void roundParse(std::string round){
     std::string played = "\n";
-    played.append(card[round.at(6) - '0' - 1].substr(4));
+    played.append(card[round.at(6) - '0'].substr(4));
     played.append(" contre ");
-    played.append(card[round.at(8) - '0' - 1].substr(4));
+    played.append(card[round.at(8) - '0'].substr(4));
     puts(played.c_str());
 
     if (round.at(0) == '0'){
-        puts("\nTour gagné");
+        puts("\nTour en attente");
     }
     else if (round.at(0) == '1'){
-        puts("\nTour perdu");
+        puts("\nTour gagné");
     }
     else if (round.at(0) == '2'){
-        puts("\nTour en attente");
+        puts("\nTour en perdu");
     }
 
     std::string score = "\nVous : ";

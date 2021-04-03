@@ -1,13 +1,15 @@
 #include "Player.h"
 
-Player::Player(stdsock::TransportSocket* sock): socket(sock), points(0)
+Player::Player(stdsock::TransportSocket* sock): socket(sock), points(0), general(false), spy(false)
 {
-
+    for (int i = 0; i < DECK_SIZE; i++){
+        deck[i] = true;
+    }
 }
 
 Player::~Player() 
 {
-    
+    delete this->socket;
 }
 
 std::string Player::recv() 
@@ -25,7 +27,12 @@ void Player::sendDeck()
     std::string msg = DECK;
     for (int i = 0; i < DECK_SIZE; i++){
         msg.append(" ");
-        msg.append(std::to_string(0));
+        if (this->deck[i]){
+            msg.append(std::to_string(0));
+        }
+        else {
+            msg.append(std::to_string(1));
+        }
     }
     this->send(msg);
 }
@@ -41,4 +48,28 @@ void Player::sendError(int code)
     error.append(" ");
     error.append(std::to_string(code));
     this->socket->send(error);
+}
+
+void Player::playCard(int card){
+    if (this->deck[card]){
+        this->setCurrentCard(card);
+        this->deck[card] = false;
+        switch (card)
+        {
+        case 6: // General
+            general = true;
+            break;
+
+        case 2: // Espion
+            spy = true;
+            break;
+        
+        default:
+            break;
+        }
+        this->send(RECEIVE);
+    }
+    else {
+        this->sendError(BAD_CARD);
+    }
 }

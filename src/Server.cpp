@@ -1,6 +1,7 @@
 #include "Socket.h"
 #include "Player.h"
 #include "Table.h"
+#include "IA.h"
 #include <iostream>
 #include <vector>
 #include <thread>
@@ -44,6 +45,8 @@ bool checkRecv(std::string data, std::vector<std::string> valid){
 }
 
 void game(Player* player){
+    IA* ia;
+    int wait_rounds = 0;
     while (player->getPoints() < 4){
         std::string request = player->recv();
         std::string response;
@@ -56,15 +59,77 @@ void game(Player* player){
 
         case str2int(ROUND):
             response = ROUND;
-            response.append(" 0 1 0 ");
+            int result;
+            if (player->getGeneral() && !ia->getGeneral()){ // [1]
+                result = table[1][player->getCurrentCard()][ia->getCurrentCard()];
+            }
+            else if (ia->getGeneral() && !player->getGeneral()){ // [2]
+                result = table[2][player->getCurrentCard()][ia->getCurrentCard()];
+            }
+            else { // [0]
+                result = table[0][player->getCurrentCard()][ia->getCurrentCard()];
+            }
+
+            response.append(" ");
+
+            switch (result)
+            {
+            case -2: // client gagne la partie
+                player->addPoints(4);
+                response.append("1");
+                break;
+
+            case -1: // ia gagne la partie
+                ia->addPoints(4);
+                response.append("2");
+                break;
+
+            case 0: // mis en attente
+                wait_rounds++;
+                response.append("0");
+                break;
+
+            case 1: // client gagne round
+                if (wait_rounds > 0){
+                    player->addPoints(wait_rounds + 1);
+                    wait_rounds = 0;
+                }
+                else {
+                    player->addPoints(1);
+                }
+                response.append("1");
+                break;
+
+            case 2: // ia gagne round
+                if (wait_rounds > 0){
+                    ia->addPoints(wait_rounds + 1);
+                    wait_rounds = 0;
+                }
+                else {
+                    ia->addPoints(1);
+                }
+                response.append("2");
+                break;
+            }
+
+            
+            response.append(" ");
+
+            response.append(std::to_string(player->getPoints()));
+            response.append(" ");
+            response.append(std::to_string(ia->getPoints()));
+
+            response.append(" ");
+
             response.append(std::to_string(player->getCurrentCard()));
-            response.append(" 4");
+            response.append(" ");
+            response.append(std::to_string(ia->getCurrentCard()));
             player->send(response);
             break;
         
 
         case str2int(SOLO):
-            //TODO make IA
+            ia = new IA();
             player->send(BEGIN);
             break;
         case str2int(DECK):
@@ -83,9 +148,8 @@ void game(Player* player){
         case str2int(CARD):
             if (request.length() == 6){
                 char choice = request.at(5);
-                if (choice >= '1' && choice <= '8'){
-                    player->setCurrentCard(choice - '0');
-                    player->send(RECEIVE);
+                if (choice >= '0' && choice <= '7'){
+                    player->playCard(choice - '0');
                 }
                 else {
                     player->sendError(BAD_CARD);
