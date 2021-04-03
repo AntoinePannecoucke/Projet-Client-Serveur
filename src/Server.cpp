@@ -8,6 +8,7 @@
 
 bool checkRecv(std::string, std::vector<std::string>);
 void game(Player*);
+void playRound(Player*, IA*, std::string&, int&);
 
 constexpr unsigned int str2int(const char* str, int h = 0){
     return !str[h] ? 5381 : (str2int(str, h+1) * 33) ^ str[h];
@@ -55,7 +56,17 @@ void game(Player* player){
         {
         case str2int(NEXT):
             if (player->getPoints() < 4 && ia->getPoints() < 4){
-                player->send(BEGIN);
+                if (player->getSpy()){
+                    ia->playCard();
+                    std::string msg = CARD;
+                    msg.append(" ");
+                    msg.append(std::to_string(ia->getCurrentCard()));
+                    player->send(msg);
+                    player->useSpy();
+                }
+                else {
+                    player->send(BEGIN);
+                }
             }
             else {
                 player->reset();
@@ -65,79 +76,13 @@ void game(Player* player){
             break;
 
         case str2int(ROUND):
-            response = ROUND;
-            int result;
             ia->playCard();
-
-            if (player->getGeneral() && !ia->getGeneral()){ // [1]
-                result = table[1][player->getCurrentCard()][ia->getCurrentCard()];
-                player->useGeneral();
-            }
-            else if (ia->getGeneral() && !player->getGeneral()){ // [2]
-                result = table[2][player->getCurrentCard()][ia->getCurrentCard()];
-                ia->useGeneral();
-            }
-            else { // [0]
-                result = table[0][player->getCurrentCard()][ia->getCurrentCard()];
-            }
-
-            response.append(" ");
-
-            switch (result)
-            {
-            case -2: // client gagne la partie
-                player->addPoints(4);
-                response.append("1");
-                break;
-
-            case -1: // ia gagne la partie
-                ia->addPoints(4);
-                response.append("2");
-                break;
-
-            case 0: // mis en attente
-                wait_rounds++;
-                response.append("0");
-                break;
-
-            case 1: // client gagne round
-                if (wait_rounds > 0){
-                    player->addPoints(wait_rounds + 1);
-                    wait_rounds = 0;
-                }
-                else {
-                    player->addPoints(1);
-                }
-                response.append("1");
-                break;
-
-            case 2: // ia gagne round
-                if (wait_rounds > 0){
-                    ia->addPoints(wait_rounds + 1);
-                    wait_rounds = 0;
-                }
-                else {
-                    ia->addPoints(1);
-                }
-                response.append("2");
-                break;
-            }
-
-            
-            response.append(" ");
-
-            response.append(std::to_string(player->getPoints()));
-            response.append(" ");
-            response.append(std::to_string(ia->getPoints()));
-
-            response.append(" ");
-
-            response.append(std::to_string(player->getCurrentCard()));
-            response.append(" ");
-            response.append(std::to_string(ia->getCurrentCard()));
-            player->send(response);
+            playRound(player, ia, response, wait_rounds);
             break;
         
+        case str2int(ROUND_SPY):
+            playRound(player, ia, response, wait_rounds);
+            break;
 
         case str2int(SOLO):
             ia = new IA();
@@ -172,7 +117,6 @@ void game(Player* player){
             break;
 
         default:
-            puts("default");
             delete player;
             return;
             break;
@@ -180,3 +124,77 @@ void game(Player* player){
         
     }
 }
+
+void playRound(Player* player, IA* ia, std::string& response, int& wait_rounds){
+    response = ROUND;
+    int result;
+            
+
+    if (player->getGeneral() && !ia->getGeneral()){ // [1]
+        result = table[1][player->getCurrentCard()][ia->getCurrentCard()];
+        player->useGeneral();
+    }
+    else if (ia->getGeneral() && !player->getGeneral()){ // [2]
+        result = table[2][player->getCurrentCard()][ia->getCurrentCard()];
+        ia->useGeneral();
+    }
+    else { // [0]
+        result = table[0][player->getCurrentCard()][ia->getCurrentCard()];
+    }
+
+    response.append(" ");
+
+    switch (result)
+    {
+    case -2: // client gagne la partie
+        player->addPoints(4);
+        response.append("1");
+        break;
+
+    case -1: // ia gagne la partie
+        ia->addPoints(4);
+        response.append("2");
+        break;
+
+    case 0: // mis en attente
+        wait_rounds++;
+        response.append("0");
+        break;
+
+    case 1: // client gagne round
+        if (wait_rounds > 0){
+            player->addPoints(wait_rounds + 1);
+            wait_rounds = 0;
+        }
+        else {
+            player->addPoints(1);
+        }
+            response.append("1");
+            break;
+
+    case 2: // ia gagne round
+        if (wait_rounds > 0){
+            ia->addPoints(wait_rounds + 1);
+            wait_rounds = 0;
+        }
+        else {
+            ia->addPoints(1);
+        }
+        response.append("2");
+        break;
+    }
+            
+    response.append(" ");
+
+    response.append(std::to_string(player->getPoints()));
+    response.append(" ");
+    response.append(std::to_string(ia->getPoints()));
+
+    response.append(" ");
+
+    response.append(std::to_string(player->getCurrentCard()));
+    response.append(" ");
+    response.append(std::to_string(ia->getCurrentCard()));
+    player->send(response);
+}
+            

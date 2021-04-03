@@ -49,11 +49,7 @@ int stdsock::TransportSocket::send(std::string msg){
     
     if (::send(sock_fd, msg.c_str(), strlen(msg.c_str()), 0) <= 0)
         puts("send erreur");
-    else{
-        char message[msg.size() + 1];
-        msg.copy(message, msg.size() + 1);
-        puts(msg.c_str());
-    }
+    
         
     return 0;
 }

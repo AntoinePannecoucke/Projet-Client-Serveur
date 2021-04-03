@@ -32,6 +32,43 @@ int main(){
     while (true){
         switch (str2int(server_response.substr(0,4).c_str())){
 
+        case str2int(CARD):
+            puts("\nL'autre joueur à joué :");
+            puts(card[server_response.at(5) - '0'].c_str());
+
+            //Réception du deck et affichage
+            transport.send(DECK);
+            server_response = transport.receive();
+            bool deck2[8];
+            deckParse(server_response.substr(5,15), deck2);
+            puts("\nVoici votre main :");
+            for (int i = 0; i < 8; i++){
+                if (deck2[i]){
+                    puts(card[i].c_str());
+                }
+            }
+
+            //Input de sélection de la carte à jouer
+            int carte2;
+            do {
+                puts("\nChoisissez la carte que vous voulez jouez");
+                std::cin >> carte2;
+                std::string request = CARD;
+                request.append(" ");
+                request.append(std::to_string(carte2));
+                transport.send(request);
+                server_response = transport.receive();
+            } while (strcmp(server_response.c_str(),RECEIVE) != 0);
+
+            transport.send(ROUND_SPY);
+
+            server_response = transport.receive();
+            roundParse(server_response.substr(5, 9));
+
+            //Demande la suite des événements
+            transport.send(NEXT);
+            break;
+
         // Show the menu
         case str2int(MENU):
             int mode;
@@ -98,7 +135,6 @@ int main(){
         }
 
         server_response = transport.receive();
-        puts(server_response.c_str());
     }
         
 }

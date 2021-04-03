@@ -89,3 +89,8 @@ void Player::useGeneral()
 {
     general = false;
 }
+
+void Player::useSpy() 
+{
+    spy = false;
+}

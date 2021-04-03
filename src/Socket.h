@@ -42,6 +42,8 @@
 #define QUIT    "quit"
 #define RECEIVE "recv"
 
+#define ROUND_SPY   "rspy"
+
 /**
  * Code Erreur
  */

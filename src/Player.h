@@ -29,6 +29,7 @@ public:
     bool getSpy(){ return this->spy; }
     void reset();
     void useGeneral();
+    void useSpy();
 };
 
 #endif // __PLAYER_H__
