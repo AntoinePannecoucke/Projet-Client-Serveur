@@ -73,3 +73,19 @@ void Player::playCard(int card){
         this->sendError(BAD_CARD);
     }
 }
+
+void Player::reset() 
+{
+    useGeneral();
+    spy = false;
+    for (int i = 0; i < DECK_SIZE; i++){
+        deck[i] = true;
+    }
+
+    points = 0;
+}
+
+void Player::useGeneral() 
+{
+    general = false;
+}

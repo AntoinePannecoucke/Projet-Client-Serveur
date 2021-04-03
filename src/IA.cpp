@@ -14,10 +14,6 @@ void IA::playCard(){
     for (int i = 0; i < DECK_SIZE; i++){
         if (deck[i]){
             cards[cpt++] = i;
-            
-        }
-        else{
-            puts(std::to_string(i).c_str());
         }
     }
     int choose = cards[rand() % cpt];

@@ -50,21 +50,32 @@ void game(Player* player){
     while (player->getPoints() < 4){
         std::string request = player->recv();
         std::string response;
-
+        
         switch (str2int(request.substr(0, 4).c_str()))
         {
         case str2int(NEXT):
-            player->send(BEGIN);
+            if (player->getPoints() < 4 && ia->getPoints() < 4){
+                player->send(BEGIN);
+            }
+            else {
+                player->reset();
+                ia->reset();
+                player->send(MENU);
+            }
             break;
 
         case str2int(ROUND):
             response = ROUND;
             int result;
+            ia->playCard();
+
             if (player->getGeneral() && !ia->getGeneral()){ // [1]
                 result = table[1][player->getCurrentCard()][ia->getCurrentCard()];
+                player->useGeneral();
             }
             else if (ia->getGeneral() && !player->getGeneral()){ // [2]
                 result = table[2][player->getCurrentCard()][ia->getCurrentCard()];
+                ia->useGeneral();
             }
             else { // [0]
                 result = table[0][player->getCurrentCard()][ia->getCurrentCard()];
@@ -161,6 +172,7 @@ void game(Player* player){
             break;
 
         default:
+            puts("default");
             delete player;
             return;
             break;

@@ -90,15 +90,15 @@ int main(){
             //Récupère les informations du tour et les affiche
             transport.send(ROUND);
             server_response = transport.receive();
-            puts(server_response.c_str());
             roundParse(server_response.substr(5, 9));
-            
+
             //Demande la suite des événements
             transport.send(NEXT);
             break;
         }
 
         server_response = transport.receive();
+        puts(server_response.c_str());
     }
         
 }
@@ -141,4 +141,12 @@ void roundParse(std::string round){
     score.append(round.substr(4,1));
     score.append(" : L'ordinateur");
     puts(score.c_str());
+
+    puts(round.c_str());
+    if (round.at(2) >= '4'){
+        puts("\nPartie gagnée");
+    }
+    else if (round.at(4) >= '4'){
+        puts("\nPartie perdue");
+    }
 }

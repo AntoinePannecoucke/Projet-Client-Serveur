@@ -52,6 +52,7 @@ int stdsock::TransportSocket::send(std::string msg){
     else{
         char message[msg.size() + 1];
         msg.copy(message, msg.size() + 1);
+        puts(msg.c_str());
     }
         
     return 0;

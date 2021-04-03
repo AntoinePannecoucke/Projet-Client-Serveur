@@ -27,6 +27,8 @@ public:
     int getCurrentCard(){ return this->current_card; }
     bool getGeneral(){ return this->general; }
     bool getSpy(){ return this->spy; }
+    void reset();
+    void useGeneral();
 };
 
 #endif // __PLAYER_H__
