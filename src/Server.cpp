@@ -22,8 +22,8 @@ int main(){
 
         player_one->setSock(connection.accept()); //Waiting connection of player 1
         Player* p_one = new Player(player_one);
-
-        game(p_one);
+        std::thread game_thread (game, p_one);
+        game_thread.detach();
     }
     return 0;
 }
