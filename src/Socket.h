@@ -14,6 +14,10 @@
 #include <arpa/inet.h>
 #include <string>
 
+/**
+ * @author Antoine Pannecoucke
+ * */
+
 #define MYPORT 3490
 
 #define BACKLOG 10
@@ -45,14 +49,17 @@
 #define ROUND_SPY   "rspy"
 
 /**
- * Code Erreur
+ * Codes Erreur
  */
 #define TIME_OUT 408
 #define BAD_RESPONSE 409
 #define BAD_CARD 400
 
+
+
 namespace stdsock {
     
+/****************Socket****************/
 
     class Socket {
     protected:
@@ -65,6 +72,8 @@ namespace stdsock {
         void setSock(unsigned int sock);
     };
     
+
+/****************ConnectionSocket****************/
 
     class ConnectionSocket : public Socket
     {
@@ -79,6 +88,8 @@ namespace stdsock {
         void openConnection();
     };
     
+
+/****************TransportSocket****************/
 
     class TransportSocket : public Socket
     {

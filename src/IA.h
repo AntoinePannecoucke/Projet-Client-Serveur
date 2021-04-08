@@ -3,6 +3,10 @@
 
 #include "Player.h"
 
+/**
+ * @author Antoine Pannecoucke
+ * */
+
 class IA : public Player
 {
 public:

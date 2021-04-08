@@ -1,6 +1,10 @@
 #include "Socket.h"
 #include <iostream>
 
+/**
+ * @author Antoine Pannecoucke
+ * */
+
 const std::string card[] = {"0 - Musicien : \"Cette manche est annulee et mise en attente\"",
                             "1 - Princesse : \"Si votre adversaire a jouee son Prince vous remportez la partie\"",
                             "2 - Espion : \"A la prochaine manche, votre adversaire revele sa carte avant que vous choisissiez la votre\"",
@@ -10,13 +14,15 @@ const std::string card[] = {"0 - Musicien : \"Cette manche est annulee et mise e
                             "6 - General : \"Votre carte de la prochaine manche voit sa valeur augmentee de +2\"",
                             "7 - Prince : \"Vous gagnez la manche\""
                             };
-
 void deckParse(std::string, bool[]);
 void roundParse(std::string);
 
 /**
+ * From https://stackoverflow.com/questions/16388510/evaluate-a-string-with-switch-in-c/16388594
  * @author Serhiy
- * * From https://stackoverflow.com/questions/16388510/evaluate-a-string-with-switch-in-c/16388594
+ * @param const char* str
+ * @param int h = 0
+ * @return constexpr unsigned int
  */
 constexpr unsigned int str2int(const char* str, int h = 0){
     return !str[h] ? 5381 : (str2int(str, h+1) * 33) ^ str[h];
@@ -140,8 +146,9 @@ int main(){
 }
 
 /**
- * @author Antoine Pannecoucke
- * @param string with 8 digits separated by ',' like example "1,0,0,1,0,1,0,1"
+ * @param string with 8 binary digits separated by one character like example : 1 0 0 1 0 1 0 1
+ * @param bool[] cards of the player
+ * @return void
  */
 void deckParse(std::string deck, bool cards[]){
     for (int i = 0; i < 15; i+=2){
@@ -154,6 +161,11 @@ void deckParse(std::string deck, bool cards[]){
     }
 }
 
+/**
+ * Traitement de la réponse du serveur à la fin du round
+ * @param std::string ROUND response without the keyword and the space after
+ * @return void
+ * */
 void roundParse(std::string round){
     std::string played = "\n";
     played.append(card[round.at(6) - '0'].substr(4));

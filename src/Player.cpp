@@ -1,5 +1,9 @@
 #include "Player.h"
 
+/**
+ * Constructor
+ * @param stdsock::TransportSocket* socket
+ * */
 Player::Player(stdsock::TransportSocket* sock): socket(sock), points(0), general(false), spy(false)
 {
     for (int i = 0; i < DECK_SIZE; i++){
@@ -7,21 +11,37 @@ Player::Player(stdsock::TransportSocket* sock): socket(sock), points(0), general
     }
 }
 
+/**
+ * Destructor
+ * */
 Player::~Player() 
 {
     delete this->socket;
 }
 
+/**
+ * Return the std::string received by the socket
+ * @return std::string
+ * */
 std::string Player::recv() 
 {
     return this->socket->receive(); 
 }
 
+
+/**
+ * @param std::string message
+ * @return void
+ * */
 void Player::send(std::string msg) 
 {
     this->socket->send(msg);
 }
 
+
+/**
+ * @return void
+ * */
 void Player::sendDeck() 
 {
     std::string msg = DECK;
@@ -37,11 +57,20 @@ void Player::sendDeck()
     this->send(msg);
 }
 
+/**
+ * Return player's points
+ * @return int
+ * */
 int Player::getPoints() 
 {
     return this->points;
 }
 
+/**
+ * Send the error passed in parameter
+ * @param int code
+ * @return void
+ * */
 void Player::sendError(int code) 
 {
     std::string error = ERROR;
@@ -50,6 +79,11 @@ void Player::sendError(int code)
     this->socket->send(error);
 }
 
+/**
+ * Check card and send RECEIVE if it's ok or BAD_CARD if there is an error
+ * @param int card
+ * @return void
+ * */
 void Player::playCard(int card){
     if (this->deck[card]){
         this->setCurrentCard(card);
@@ -74,10 +108,15 @@ void Player::playCard(int card){
     }
 }
 
+
+/**
+ * Reset all the player for a new game
+ * @return void
+ * */
 void Player::reset() 
 {
     useGeneral();
-    spy = false;
+    useSpy();
     for (int i = 0; i < DECK_SIZE; i++){
         deck[i] = true;
     }
@@ -85,11 +124,20 @@ void Player::reset()
     points = 0;
 }
 
+/**
+ * Set general at false
+ * @return void
+ * */
 void Player::useGeneral() 
 {
     general = false;
 }
 
+
+/**
+ * Set spy at false
+ * @return void
+ * */
 void Player::useSpy() 
 {
     spy = false;

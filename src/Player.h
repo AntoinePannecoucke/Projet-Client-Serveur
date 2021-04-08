@@ -4,15 +4,18 @@
 
 #define DECK_SIZE 8
 
+/**
+ * @author Antoine Pannecoucke
+ * */
 class Player
 {
 protected:
-    /* data */
     stdsock::TransportSocket* socket;
     bool deck[DECK_SIZE];
     int current_card;
     int points;
     bool general, spy;
+
 public:
     Player(stdsock::TransportSocket*);
     virtual ~Player();
@@ -20,16 +23,43 @@ public:
     void send(std::string);
     void sendDeck();
     int getPoints();
-    void addPoints(int score){ this->points += score; }
-    void sendError(int);
-    virtual void playCard(int);
-    void setCurrentCard(int card){ this->current_card = card; }
-    int getCurrentCard(){ return this->current_card; }
-    bool getGeneral(){ return this->general; }
-    bool getSpy(){ return this->spy; }
     void reset();
     void useGeneral();
     void useSpy();
+    void sendError(int);
+    virtual void playCard(int);
+
+    /**
+     * Set the card
+     * @param int card
+     * @return void
+     * */
+    void setCurrentCard(int card){ this->current_card = card; }
+
+    /**
+     * Return card
+     * @return int
+     * */
+    int getCurrentCard(){ return this->current_card; }
+
+    /**
+     * Return general
+     * @return bool
+     * */
+    bool getGeneral(){ return this->general; }
+
+    /**
+     * Return spy
+     * @return bool
+     * */
+    bool getSpy(){ return this->spy; }
+
+    /**
+     * Add points to player's score
+     * @param int score
+     * @return void
+     * */
+    void addPoints(int score){ this->points += score; }
 };
 
 #endif // __PLAYER_H__

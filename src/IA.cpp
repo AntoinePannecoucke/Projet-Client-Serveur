@@ -1,13 +1,23 @@
 #include "IA.h"
 
+/**
+ * Constructor
+ * */
 IA::IA(): Player(nullptr)
 {
 }
 
+/**
+ * Destructor
+ * */
 IA::~IA()
 {
 }
 
+/**
+ * Joue une carte dans les cartes disponibles
+ * @return void
+ * */
 void IA::playCard(){
     int cards[DECK_SIZE];
     int cpt = 0;
