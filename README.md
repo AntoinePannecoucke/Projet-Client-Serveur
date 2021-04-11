@@ -5,6 +5,7 @@
 * [Implementations](#implementations)
 * [Compilation](#compilation)
 * [Utilisation](#utilisation)
+* [Git](#git)
 
 ## Informations générales
 BraveRats est un jeu minimaliste de l'auteur de Love Letter pour deux joueurs. Chaque joueur a 8 cartes en main (numérotées de 0 à 7 et avec un pouvoir spécial). Chacun en choisit une, la pose et c'est la plus haute qui l'emporte. Le premier joueur a avoir gagné 4 rounds est le vainqueur.  Et les pouvoirs spéciaux vont grandement influencer la partie !
@@ -24,3 +25,6 @@ Pour compiler, merci d'utiliser la commande suivante : `./scripts/build.sh`
 ## Utilisation
 * Pour lancer un client, lancer un terminal et lancer la commande `./exe/Client.exe`
 * Pour lancer le serveur, lancer un terminal et lancer la commande `./exe/Serveur.exe`
+
+## Git
+https://github.com/AntoinePannecoucke/Projet-Client-Serveur
