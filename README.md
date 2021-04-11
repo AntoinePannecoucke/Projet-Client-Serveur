@@ -22,5 +22,5 @@ BraveRats est un jeu minimaliste de l'auteur de Love Letter pour deux joueurs. C
 Pour compiler, merci d'utiliser la commande suivante : `./scripts/build.sh`
 
 ## Utilisation
-* Pour lancer un client, lancer un terminal et lancer la commande `.exe/Client.exe`
-* Pour lancer le serveur, lancer un terminal et lancer la commande `.exe/Serveur.exe`
+* Pour lancer un client, lancer un terminal et lancer la commande `./exe/Client.exe`
+* Pour lancer le serveur, lancer un terminal et lancer la commande `./exe/Serveur.exe`
